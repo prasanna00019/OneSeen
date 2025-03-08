@@ -85,14 +85,14 @@ const Header = () => {
             <div class="flex items-center gap-4">
               <div class="sm:flex sm:gap-4">
                 <Button
-                  class="block hover:cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-primary"
+                  class="block hover:cursor-pointer rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-primary"
                   onClick={login}
                 >
                   Login
                 </Button>
 
                 <Button
-                  class="hidden hover:cursor-pointer rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-medium text-primary transition hover:text-primary sm:block"
+                  class="hidden hover:cursor-pointer rounded-full bg-gray-100 px-5 py-2.5 text-sm font-medium text-primary transition hover:text-primary sm:block"
                   onClick={register}
                 >
                   Register

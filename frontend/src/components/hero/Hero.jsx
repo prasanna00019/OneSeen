@@ -17,17 +17,15 @@ const Hero = () => {
                 anonymously.{" "}
               </strong>
             </h1>
-
             <p class="mt-4 sm:text-xl/relaxed">
               Welcome to OneSeen, the ultimate platform for secret confessions
               and one-time messages. Share your thoughts anonymously, send
               private messages that disappear after being read, and experience
               true digital secrecy.
             </p>
-
             <div class="mt-8 flex flex-wrap justify-center gap-4">
               <Button
-                class="block w-full hover:cursor-pointer rounded-xl bg-primary px-12 py-3 text-sm font-medium text-white shadow-sm hover:bg-primary focus:ring-3 focus:outline-hidden sm:w-auto"
+                class="block w-full hover:cursor-pointer rounded-full bg-primary px-12 py-3 text-sm font-medium text-white shadow-sm hover:bg-primary focus:ring-3 focus:outline-hidden sm:w-auto"
                 onClick={login}
               >
                 Get Started

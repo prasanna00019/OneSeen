@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import logo from "../../assets/logo.svg";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import {
@@ -27,6 +27,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { changeRoute } from "../../slices/routeSlice";
+import { SocketContext } from "../../../context/SocketContext";
 
 const Sidebar = () => {
   const { user, logout } = useKindeAuth();
@@ -37,7 +38,7 @@ const Sidebar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const currentRoute = useSelector((state) => state.router.currentRoute);
-
+  const { socket } = useContext(SocketContext);
   const handleSubmitPost = async () => {
     if (title.length === 0 || description.length === 0) {
       return toast.error("Please fill up all details before posting.");
@@ -52,6 +53,9 @@ const Sidebar = () => {
           userId: user.id,
         }
       );
+      const newpost = response.data;
+      //   console.log("response:", response);
+      socket.emit("newPost", newpost);
       toast.success("Post created successfully!");
       setIsDialogOpen(false);
     } catch (err) {
@@ -193,7 +197,7 @@ const Sidebar = () => {
               Inbox
             </p>
           </div>
-          <div
+          {/* <div
             role="button"
             className="flex hover:cursor-pointer items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
             onClick={() => {
@@ -228,7 +232,7 @@ const Sidebar = () => {
             <p className={` ${currentRoute == 3 ? "text-primary" : ""}`}>
               Settings
             </p>
-          </div>
+          </div> */}
         </nav>
         {/* Footer Section */}
         <div className="flex">
