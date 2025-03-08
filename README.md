@@ -1,4 +1,3 @@
-![](frontend/src/assets/logo.svg)
 # OneSeen - Secret Confessions & One-Time Messages
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -24,6 +23,15 @@ Welcome to **OneSeen**, a fully anonymous platform where users can post confessi
 - ⏳ **Timer-Based Expiry** – Unopened messages expire in 24 hours.
 - 📝 **Anonymous Confession Feed** – Post and read confessions without revealing your identity.
 - 🛡 **Privacy-Focused** – No data storage, no tracking, no logs.
+- 🔑 **End-to-End Encryption** – Messages are encrypted with a 60-digit key using the **CryptoJS** library.
+
+## Branches
+The repository is structured into multiple branches for better organization:
+
+- **master** (default) – The main stable release.
+- **BACKEND** – Contains all backend-related development with Node.js and Express.
+- **DEPLOY** – Deployment-specific configurations and scripts.
+- **NSFW-AI** – AI-based NSFW content moderation and abuse detection.
 
 ## Installation
 ### Backend Setup
@@ -59,6 +67,7 @@ Welcome to **OneSeen**, a fully anonymous platform where users can post confessi
 - **Post a confession:** Users can submit anonymous confessions to the public feed.
 - **Send a secret message:** Users generate a one-time link for private messages.
 - **Read before it’s gone:** Once opened, messages disappear permanently.
+- **Encryption:** Every message is encrypted using **CryptoJS AES encryption** with a **randomly generated 60-digit key** to ensure security.
 
 ## Technologies Used
 - **Frontend:** React.js
@@ -66,6 +75,7 @@ Welcome to **OneSeen**, a fully anonymous platform where users can post confessi
 - **Database:** MongoDB
 - **Real-time Processing:** WebSockets
 - **Hosting:** Render
+- **Encryption:** CryptoJS (AES 256-bit encryption)
 
 ## Contributing
 1. Fork the repository.
@@ -74,10 +84,6 @@ Welcome to **OneSeen**, a fully anonymous platform where users can post confessi
 4. Push to the branch: `git push origin feature-branch`.
 5. Submit a Pull Request.
 
-## License
-This project is licensed under the MIT License.
-
 ---
 
 🚀 **OneSeen – Say it. See it. Gone Forever.**
-
