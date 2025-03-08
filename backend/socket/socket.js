@@ -72,17 +72,17 @@ io.on('connection', (socket) => {
     socket.on('postDeleted',(data)=>{
        io.emit('postDeleted',data); 
     });
-    socket.on('disappearMessage', async ({id,msg}) => {
+    socket.on('disappearMessage', async (msg) => {
         try {
-         console.log('id d:', id);
+        //  console.log('id d:', id);
          console.log('msg d:', msg);
-            //    const res = await fetch(`http://localhost:5000/api/messages/delete-message/${id}`, {
-            //     method: 'DELETE',
-            // });
+               const res = await fetch(`http://localhost:5000/api/messages/delete-message/${msg._id}`, {
+                method: 'DELETE',
+            });
         
-            // if (res.status === 200) {
-            //     io.emit('disappearMessage', {id,msg});
-            // }
+            if (res.status === 200) {
+                io.emit('disappearMessage', msg);
+            }
         // }
         } catch (error) {
             console.error('Error disappearing message:', error);

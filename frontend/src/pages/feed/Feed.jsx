@@ -314,7 +314,10 @@ const handleEditPost= async () => {
       </div>
 
       <div className="w-[70%] mx-auto py-5 custom-scrollbar">
-        {posts.map((post) => (
+        {posts.length===0?(
+ <div className="">
+ <p className="text-center text-gray-500">No latest feed found.</p>
+</div>        ):posts.map((post) => (
           <div 
             key={post._id}
             className="border-b hover:cursor-pointer text-start border-gray-200 p-4"

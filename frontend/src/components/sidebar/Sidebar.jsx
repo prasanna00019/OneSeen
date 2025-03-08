@@ -206,15 +206,15 @@ const {socket}=useContext(SocketContext);
             }}
           >
             <div className="grid mr-4 place-items-center">
-              <User
+              {/* <User
                 className={`w-5 h-5  ${
                   currentRoute == 2 ? "text-primary" : ""
                 }`}
-              />
+              /> */}
             </div>
-            <p className={` ${currentRoute == 2 ? "text-primary" : ""}`}>
+            {/* <p className={` ${currentRoute == 2 ? "text-primary" : ""}`}>
               Profile
-            </p>
+            </p> */}
           </div>
           <div
             role="button"
@@ -224,15 +224,15 @@ const {socket}=useContext(SocketContext);
             }}
           >
             <div className="grid mr-4 place-items-center">
-              <Settings2
+              {/* <Settings2
                 className={`w-5 h-5  ${
                   currentRoute == 3 ? "text-primary" : ""
                 }`}
-              />
+              /> */}
             </div>
-            <p className={` ${currentRoute == 3 ? "text-primary" : ""}`}>
+            {/* <p className={` ${currentRoute == 3 ? "text-primary" : ""}`}>
               Settings
-            </p>
+            </p> */}
           </div>
         </nav>
         {/* Footer Section */}
