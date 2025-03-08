@@ -40,7 +40,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
       );
       try {
         const response = await axios.get(
-          `https://oneseen.onrender.com/api/messages/get-messages/${authUser.id}/${selectedUser.username}`
+          `http://localhost:5000/api/messages/get-messages/${authUser.id}/${selectedUser.username}`
         );
         console.log("response:", response);
         setMessages(response.data);
@@ -97,7 +97,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
                     : "bg-gray-200"
                 }`}
               >
-                https://oneseen.onrender.com/message/{msg._id}
+                http://localhost:5000/message/{msg._id}
               </span>
               <span
                 onClick={() => {

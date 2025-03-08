@@ -12,9 +12,9 @@ createRoot(document.getElementById("root")).render(
     <SocketProvider>
     <KindeProvider
       clientId="6cc5143dd74f46c29d4afb98b03e97e6"
-      domain="https://oneseen.kinde.com"
-      redirectUri="https://oneseen.onrender.com/homepage"
-      logoutUri="https://oneseen.onrender.com"
+      domain="http://localhost:5173"
+      redirectUri="http://localhost:5173/homepage"
+      logoutUri="http://localhost:5173"
       >
               <Provider store={store}>
       <App />

@@ -5,7 +5,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["https://oneseen.onrender.com","http://localhost:5174"],
+        origin: ["https://oneseen.onrender.com","http://localhost:5173"],
         methods: ["GET", "POST","DELETE","PUT","PATCH"],
     }
 });
@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     console.log('userSocketMap:', userSocketMap);
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
     socket.on('sendMesage', async(data) => {
-        const res = await fetch(`https://oneseen.onrender.com/api/messages/create-message/`,{
+        const res = await fetch(`http://localhost:5000/api/messages/create-message/`,{
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
         try {
         //  console.log('id d:', id);
          console.log('msg d:', msg);
-               const res = await fetch(`https://oneseen.onrender.com/api/messages/delete-message/${msg._id}`, {
+               const res = await fetch(`http://localhost:5000/api/messages/delete-message/${msg._id}`, {
                 method: 'DELETE',
             });
         

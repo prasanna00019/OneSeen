@@ -19,7 +19,7 @@ const Message = () => {
     const getAllUsers = async () => {
       try {
         const response = await axios.get(
-          "https://oneseen.onrender.com/api/auth/all-users"
+          "http://localhost:5000/api/auth/all-users"
         );
         setUsers(response.data);
       } catch (error) {

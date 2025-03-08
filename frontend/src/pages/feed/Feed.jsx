@@ -57,7 +57,7 @@
 //   const handleDelete = async (postId) => {
 //     try {
 //       // Make your delete API call here
-//       await axios.delete(`https://oneseen.onrender.com/api/posts/delete/${postId}`);
+//       await axios.delete(`http://localhost:5000/api/posts/delete/${postId}`);
 //       setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
 //     } catch (error) {
 //       console.error("Error deleting post:", error);
@@ -65,7 +65,7 @@
 //   };
 //   const fetchFeed = async () => {
 //     try {
-//       const response = await axios.get("https://oneseen.onrender.com/api/posts/get-posts");
+//       const response = await axios.get("http://localhost:5000/api/posts/get-posts");
 //       const sortedPosts = response.data.sort(
 //         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
 //       );
@@ -77,7 +77,7 @@
 
 //   const handleUpvote = async (postId) => {
 //     try {
-//       const response = await axios.put(`https://oneseen.onrender.com/api/posts/upvote/${postId}`,{
+//       const response = await axios.put(`http://localhost:5000/api/posts/upvote/${postId}`,{
 //         userId: user.id
 //       });
 //       const updatedPost = response.data.post;
@@ -96,7 +96,7 @@
 
 //   const handleDownvote = async (postId) => {
 //     try {
-//       const response = await axios.put(`https://oneseen.onrender.com/api/posts/downvote/${postId}`,{
+//       const response = await axios.put(`http://localhost:5000/api/posts/downvote/${postId}`,{
 //         userId: user.id
 //       });
 //       const updatedPost = response.data.post;
@@ -262,7 +262,7 @@ const Feed = () => {
 
   const fetchFeed = async () => {
     try {
-      const response = await axios.get("https://oneseen.onrender.com/api/posts/get-posts");
+      const response = await axios.get("http://localhost:5000/api/posts/get-posts");
       const sortedPosts = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -279,7 +279,7 @@ const Feed = () => {
        }
       const endpoint = type === 'upvote' ? 'upvote' : 'downvote';
       const response = await axios.put(
-        `https://oneseen.onrender.com/api/posts/${endpoint}/${postId}`,
+        `http://localhost:5000/api/posts/${endpoint}/${postId}`,
         { userId: user.id }
       );
       const updatedPost = response.data.post;
@@ -298,7 +298,7 @@ const Feed = () => {
     console.log('postToDelete:', postToDelete);
     if (!postToDelete) return;
     try {
-      const response= await axios.delete(`https://oneseen.onrender.com/api/posts/delete-post/${postToDelete}`);
+      const response= await axios.delete(`http://localhost:5000/api/posts/delete-post/${postToDelete}`);
       // setPosts(prevPosts => prevPosts.filter(post => post._id !== postToDelete));
       const postid=response.data.postId;
       socket.emit('postDeleted',postid)
@@ -311,7 +311,7 @@ const handleEditPost= async () => {
   console.log('posttoedit:', posttoedit);
   if (!posttoedit) return;
   try {
-   const response= await axios.put(`https://oneseen.onrender.com/api/posts/edit-post/${posttoedit._id}`,{
+   const response= await axios.put(`http://localhost:5000/api/posts/edit-post/${posttoedit._id}`,{
       title:posttoedit.title,
       description:posttoedit.description,
       media:posttoedit.media
