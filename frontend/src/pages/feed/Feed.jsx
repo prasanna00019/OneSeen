@@ -6,12 +6,12 @@ import { Input } from "../../components/ui/input";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchFeed = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/posts/get-posts");
       const data = await response.json();
-      // Sort posts by createdAt in descending order
       const sortedPosts = data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -24,20 +24,31 @@ const Feed = () => {
   useEffect(() => {
     fetchFeed();
     const interval = setInterval(fetchFeed, 3000);
-
     return () => clearInterval(interval);
   }, []);
 
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.user.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="">
+    <div>
       <div className="flex p-5 gap-3">
-        <Input placeholder="Search..." className="rounded-full border-2" />
+        <Input
+          placeholder="Search..."
+          className="rounded-full border-2"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <button className="flex items-center gap-2 text-gray-500">
           <Search className="w-6 h-6" />
         </button>
       </div>
       <div className="w-[70%] mx-auto py-5 custom-scrollbar">
-        {posts.map((post) => (
+        {filteredPosts.map((post) => (
           <Dialog key={post.id}>
             <DialogTrigger>
               <div className="border-b hover:cursor-pointer text-start border-gray-200 p-4">
