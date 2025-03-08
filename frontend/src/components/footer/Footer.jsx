@@ -22,7 +22,7 @@ const Footer = () => {
 
             <Button
               onClick={register}
-              class="mt-8 hover:cursor-pointer inline-block rounded-full border border-primary px-12 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white focus:ring-3 focus:outline-hidden"
+              class="mt-8 hover:cursor-pointer inline-block rounded-xl border border-primary px-12 py-3 text-sm font-medium text-primary hover:bg-primary hover:text-white focus:ring-3 focus:outline-hidden"
             >
               Get Started
             </Button>

@@ -19,11 +19,70 @@ export const getRecieverSocketId = (recieverId) => {
 }
 const userSocketMap = {};//{userId:socketId}
 io.on('connection', (socket) => {
+    console.log('a user connected', socket.id);
     const userId = socket.handshake.query.userId;
-    if (userId != "undefined") {
-        userSocketMap[userId] = socket.id;
+    const Authuser = socket.handshake.query.Authuser;
+    console.log('userId:', userId);
+    console.log('Authuser:', Authuser);
+    if (userId!==null ) {
+        userSocketMap[socket.id] = userId;
     }
+    if (Authuser!==undefined) {
+        userSocketMap[socket.id] =Authuser.id;
+    }
+    console.log('userSocketMap:', userSocketMap);
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    socket.on('sendMesage', async(data) => {
+        const res = await fetch(`http://localhost:5000/api/messages/create-message/`,{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify({message:data.message,expiresAt:data.expiresAt,sender:data.sender,recipient:data.recipient}),
+        });
+        const response=await res.json();
+        console.log('response:',response);
+            // console.log('data recieved',data);
+        const receiverSocket = Object.keys(userSocketMap).find(
+               (key) => userSocketMap[key] === data.recipient
+             );
+             const senderSocket=Object.keys(userSocketMap).find(
+               (key) => userSocketMap[key] === data.sender
+             )
+             console.log('receiverSocket:', receiverSocket);
+    //    io.emit('receiveMessage',response);       
+       if (receiverSocket) {
+        console.log('receiverSocket:', receiverSocket);
+               io.to(receiverSocket).emit('receiveMessage', response);
+               io.to(senderSocket).emit('receiveMessage', response);
+       }
+    });
+    socket.on('disappearMessage', async (id) => {
+        try {
+        //    if(!flag){
+               const res = await fetch(`http://localhost:5000/api/messages/delete-message/${id}`, {
+                method: 'DELETE',
+            });
+        
+            if (res.status === 200) {
+                io.emit('disappearMessage', id);
+            }
+        // }
+        } catch (error) {
+            console.error('Error disappearing message:', error);
+        }
+    });
+    socket.on('register', (userId) => {
+        console.log('registered user with ID:', userId);
+        for (const [socketId, mappedUserId] of Object.entries(userSocketMap)) {
+          if (mappedUserId === userId || mappedUserId==undefined) {
+            delete userSocketMap[socketId];
+          }
+        }
+        userSocketMap[socket.id] = userId;
+        console.log('userSocketMap:', userSocketMap);
+        console.log('soicket id', socket.id);
+      })
     socket.on('disconnect', () => {
         delete userSocketMap[userId];
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
