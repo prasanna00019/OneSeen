@@ -50,7 +50,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
     };
     fetchMessages();
   }, [selectedUser, authUser]);
-  const handle\=async(msg,flag)=>{
+  const handleDisappearMessage=async(msg,flag)=>{
     try{
       console.log(flag ,' flag');
       if(!flag){
