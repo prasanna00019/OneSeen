@@ -67,7 +67,7 @@ export const DeletePost = async (req, res) => {
             CommentModel.deleteMany({ post: postId }),  // Delete comments
             PostModel.findByIdAndDelete(postId)         // Delete post
         ]);
-        res.status(200).json({ message: "Post and its comments deleted successfully" });
+        res.status(200).json({ message: "Post and its comments deleted successfully",postId : postId });
     } catch (err) {
         console.error("Error deleting post and comments:", err);
         res.status(500).json({ message: "Internal Server Error" });

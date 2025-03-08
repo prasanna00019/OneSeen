@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,23 +14,22 @@ import { toast } from "sonner";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import axios from "axios";
 import { ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
+import { SocketContext } from "../../../context/SocketContext";
 
 const Homepage = () => {
-  const dispatch = useDispatch();
   const { user } = useKindeAuth();
   const currentRoute = useSelector((state) => state.router.currentRoute);
   const [interval, setInterval] = useState(5);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [userPosts, setUserPosts] = useState([]);
-
+  const {socket}=useContext(SocketContext);
   const handleIntervalChange = (e) => {
     const value = parseInt(e.target.value, 10);
     if (value >= 5 && value <= 1440) {
       setInterval(value);
     }
   };
-
   const handleSubmitPost = async () => {
     if (title.length === 0 || description.length === 0) {
       return toast.error("Please fill up all details before posting.");
@@ -68,8 +67,15 @@ const Homepage = () => {
   };
 
   useEffect(() => {
-    fetchUserPosts();
-  }, [user.id]);
+    socket.on("newPost", (data) => {
+      console.log("data:", data);
+      setUserPosts((prevPosts) => [data, ...prevPosts]);
+      // fetchUserPosts();
+    });
+    return () => {
+      socket.off("newPost");
+    }
+  }, [socket]);
 
   return (
     <div className="flex h-screen">

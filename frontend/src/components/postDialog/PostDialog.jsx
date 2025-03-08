@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,11 +16,19 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { SocketContext } from "../../../context/SocketContext";
 
 const PostDialog = ({ post }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-
+  const {socket}=useContext(SocketContext);
+  useEffect(()=>{
+    socket.on('newComment',(newcomment)=>{
+        console.log('newcomment socket ... ',newcomment);
+      setComments((prevComments) => [newcomment,...prevComments]);
+    });
+    return ()=>socket.off('newComment');
+  },[socket])
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
@@ -36,7 +44,8 @@ const PostDialog = ({ post }) => {
       );
       setComment("");
       if (response.status == 201) {
-        fetchComments();
+        const newcomm=response.data;
+        socket.emit('newComment',newcomm);
       }
     } catch (error) {
       console.error(error);

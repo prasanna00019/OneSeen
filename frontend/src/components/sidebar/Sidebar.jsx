@@ -54,7 +54,9 @@ const {socket}=useContext(SocketContext);
           userId: user.id,
         }
       );
-      socket.emit("newPost", response.data);
+      const newpost=response.data;
+    //   console.log("response:", response);
+      socket.emit("newPost",newpost);
       toast.success("Post created successfully!");
       setIsDialogOpen(false);
     } catch (err) {

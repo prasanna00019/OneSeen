@@ -66,6 +66,9 @@ io.on('connection', (socket) => {
     socket.on("newPost",(data)=>{
         io.emit("newPost",data);
     })
+    socket.on('newComment',(data)=>{
+        io.emit('newComment',data);
+    })
     socket.on('disappearMessage', async (id) => {
         try {
         //    if(!flag){
