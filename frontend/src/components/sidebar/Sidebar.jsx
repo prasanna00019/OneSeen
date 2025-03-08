@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import logo from "../../assets/logo.svg";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import {
@@ -28,6 +28,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { changeRoute } from "../../slices/routeSlice";
+import { SocketContext } from "../../../context/SocketContext";
 
 const Sidebar = () => {
   const { user, logout } = useKindeAuth();
@@ -38,7 +39,7 @@ const Sidebar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const currentRoute = useSelector((state) => state.router.currentRoute);
-
+const {socket}=useContext(SocketContext);
   const handleSubmitPost = async () => {
     if (title.length === 0 || description.length === 0) {
       return toast.error("Please fill up all details before posting.");
@@ -53,6 +54,7 @@ const Sidebar = () => {
           userId: user.id,
         }
       );
+      socket.emit("newPost", response.data);
       toast.success("Post created successfully!");
       setIsDialogOpen(false);
     } catch (err) {

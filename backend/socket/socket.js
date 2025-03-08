@@ -57,6 +57,15 @@ io.on('connection', (socket) => {
                io.to(senderSocket).emit('receiveMessage', response);
        }
     });
+    socket.on("upvoted",(data)=>{
+        io.emit("upvoted",data);
+    })
+    socket.on("downvote",(data)=>{
+        io.emit("downvote",data);
+    })
+    socket.on("newPost",(data)=>{
+        io.emit("newPost",data);
+    })
     socket.on('disappearMessage', async (id) => {
         try {
         //    if(!flag){

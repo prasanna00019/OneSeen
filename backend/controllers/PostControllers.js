@@ -106,13 +106,18 @@ export const DeletePost = async (req, res) => {
             if (!post) return res.status(404).json({ message: "Post not found" });
             // If user already upvoted, remove the upvote
             if (post.upvotedUsers.includes(userId)) {
+                console.log("User already upvoted");
                 post.upvotedUsers = post.upvotedUsers.filter(id => id !== userId);
+                if(post.upvotes>0){
                 post.upvotes -= 1;
+                }
             } else {
                 // If user has downvoted before, remove downvote
                 if (post.downvotedUsers.includes(userId)) {
                     post.downvotedUsers = post.downvotedUsers.filter(id => id !== userId);
+                    if(post.downvotes>0){
                     post.downvotes -= 1;
+                    }
                 }
                 // Add upvote
                 post.upvotedUsers.push(userId);
@@ -132,13 +137,18 @@ export const DeletePost = async (req, res) => {
             if (!post) return res.status(404).json({ message: "Post not found" });
             // If user already downvoted, remove the downvote
             if (post.downvotedUsers.includes(userId)) {
+                console.log("User already downvoted");
                 post.downvotedUsers = post.downvotedUsers.filter(id => id !== userId);
+               if(post.downvotes>0){ 
                 post.downvotes -= 1;
+               }
             } else {
                 // If user has upvoted before, remove upvote
                 if (post.upvotedUsers.includes(userId)) {
                     post.upvotedUsers = post.upvotedUsers.filter(id => id !== userId);
+                  if(post.upvotes>0){
                     post.upvotes -= 1;
+                  }
                 }
                 // Add downvote
                 post.downvotedUsers.push(userId);
