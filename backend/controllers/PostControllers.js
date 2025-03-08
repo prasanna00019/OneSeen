@@ -18,6 +18,17 @@ export const CreatePost=async(req,res)=>{
     res.status(500).json({message:"Internal Server Error"});
  }
 }
+export const getPostsOfAUser=async(req,res)=>{
+    try{
+        const userId=req.params.userId;
+        const posts=await PostModel.find({user:userId});
+        res.status(200).json(posts);
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({message:"Internal Server Error"});
+    }
+}
 export const EditPost=async(req,res)=>{
     try{
       const {description ,media,title}=req.body;

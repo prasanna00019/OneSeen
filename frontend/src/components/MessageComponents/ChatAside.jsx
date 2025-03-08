@@ -69,7 +69,6 @@ const handleDisappearMessage=async(id,flag)=>{
       console.error('Error sending message:', error);
     }
   };
-
   return (
     <div className="w-2/3 p-4 border-l">
       <h2 className="text-lg font-semibold">Chat with {selectedUser.username}</h2>
