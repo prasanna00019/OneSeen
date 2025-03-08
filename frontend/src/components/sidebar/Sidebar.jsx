@@ -36,6 +36,7 @@ const Sidebar = () => {
   const [interval, setInterval] = useState(5);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const {isAuthenticated}=useKindeAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const currentRoute = useSelector((state) => state.router.currentRoute);
@@ -46,12 +47,12 @@ const {socket}=useContext(SocketContext);
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/posts/create-post",
+        "https://oneseen.onrender.com/api/posts/create-post",
         {
           description,
           title,
           interval: interval * 60,
-          userId: user.id,
+          userId:isAuthenticated? user.id:"Anonymous",
         }
       );
       const newpost=response.data;
@@ -187,16 +188,19 @@ const {socket}=useContext(SocketContext);
               dispatch(changeRoute(1));
             }}
           >
-            <div className="grid mr-4 place-items-center">
+           {isAuthenticated && <div className="grid mr-4 place-items-center">
               <MessageCircleDashed
                 className={`w-5 h-5  ${
                   currentRoute == 1 ? "text-primary" : ""
                 }`}
               />
-            </div>
-            <p className={` ${currentRoute == 1 ? "text-primary" : ""}`}>
+            </div>}
+         {isAuthenticated &&   <p className={` ${currentRoute == 1 ? "text-primary" : ""}`}>
               Inbox
-            </p>
+            </p>}
+            {!isAuthenticated &&   <p onClick={(e)=>{{e.stopPropagation();navigate('/')}}}>
+              Login to chat
+            </p>}
           </div>
           <div
             role="button"
@@ -237,13 +241,13 @@ const {socket}=useContext(SocketContext);
         </nav>
         {/* Footer Section */}
         <div className="flex">
-          <a
+         {isAuthenticated &&  <a
             onClick={handleLogout}
             className="hover:cursor-pointer flex mr-3 items-center"
           >
             <LogOut className="h-5 w-5 mr-3" />
             Log Out
-          </a>
+          </a>}
         </div>
       </div>
     </div>

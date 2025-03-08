@@ -3,6 +3,7 @@ import CommentModel from "../models/CommentModel.js";
 export const CreatePost=async(req,res)=>{
  try{
   const {description , media, userId,title,interval}=req.body;
+  console.log(interval,media,userId);
     const post=new PostModel({
         description,
         media,
@@ -32,6 +33,7 @@ export const getPostsOfAUser=async(req,res)=>{
 export const EditPost=async(req,res)=>{
     try{
       const {description ,media,title}=req.body;
+      console.log(description,media,title,'server...');
       const postId=req.params.postId;
       const post =await PostModel.findById(postId);
         if(!post){
@@ -44,6 +46,7 @@ export const EditPost=async(req,res)=>{
         post.description=description;
         post.media=media;
         post.title=title;
+        post.isEdited=true;
         const updatedPost=await post.save();
         res.status(200).json(updatedPost);
        }

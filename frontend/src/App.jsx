@@ -11,6 +11,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/anonymous" element={<Homepage/>} />
           <Route element={<ProtectedRoute />}>
           <Route path='/message/:messageId' element={<ViewMessage/>}/>
             <Route path="/homepage" element={<Homepage />} />

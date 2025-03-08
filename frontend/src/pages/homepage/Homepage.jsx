@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Feed from "../feed/Feed";
 import Profile from "../profile/Profile";
 import Inbox from "../inbox/Inbox";
@@ -15,6 +15,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import axios from "axios";
 import { ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
 import { SocketContext } from "../../../context/SocketContext";
+import ImageUploader from "../../components/ImageUploader";
 
 const Homepage = () => {
   const { user } = useKindeAuth();
@@ -24,6 +25,38 @@ const Homepage = () => {
   const [description, setDescription] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   const { socket } = useContext(SocketContext);
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "prasanna"); // Replace with your Cloudinary Upload Preset
+    formData.append("cloud_name", "duccgjatp"); // Replace with your Cloudinary Cloud Name
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/duccgjatp/image/upload`,
+        formData
+      );
+      console.log("res:", res);
+      setImageUrl(res.data.secure_url);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setLoading(false);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
   const handleIntervalChange = (e) => {
     const value = parseInt(e.target.value, 10);
     if (value >= 5 && value <= 1440) {
@@ -35,19 +68,22 @@ const Homepage = () => {
       return toast.error("Please fill up all details before posting.");
     }
     try {
+      console.log("imageUrl:", imageUrl);
       const response = await axios.post(
-        "http://localhost:5000/api/posts/create-post",
+        "https://oneseen.onrender.com/api/posts/create-post",
         {
           description,
           title,
           interval: interval * 60,
           userId: user.id,
+          media: imageUrl
         }
       );
       const newpost=response.data;
-    //   console.log("response:", response);
+      console.log("response:", response);
       socket.emit("newPost",newpost);
       toast.success("Post created successfully!");
+      
       // setIsDialogOpen(false);
     } catch (err) {
       toast.error("Error creating post: " + err.response);
@@ -57,7 +93,7 @@ const Homepage = () => {
   const fetchUserPosts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/posts/get-post-of-a-user/${user.id}`
+        `https://oneseen.onrender.com/api/posts/get-post-of-a-user/${user.id}`
       );
       const posts = response.data;
       const sortedPosts = posts.sort(
@@ -102,7 +138,7 @@ const Homepage = () => {
       </div>
       {currentRoute == 0 && (
         <div className="py-10 px-5 border h-screen shadow-lg">
-          <div className="grid gap-4 p-4 border">
+          {/* <div className="grid gap-4 p-4 border">
             <h1 className="text-2xl pb-5 font-bold">Share your thoughts</h1>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="title" className="text-right">
@@ -144,8 +180,58 @@ const Homepage = () => {
             <Button onClick={handleSubmitPost} className="hover:cursor-pointer">
               Share
             </Button>
-          </div>
+          </div> */}
+           <div className="grid gap-4 p-4 border">
+      <h1 className="text-2xl pb-5 font-bold">Share your thoughts</h1>
+      
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="title" className="text-right">Title</Label>
+        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="col-span-3" />
+      </div>
 
+      <div className="grid grid-cols-1 items-center gap-4">
+        <Label htmlFor="description" className="text-right">Description</Label>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full"
+          placeholder="Type your message here."
+        />
+      </div>
+
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="interval" className="text-right">Expiry (min)</Label>
+        <Input
+          id="interval"
+          type="number"
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+          className="col-span-3"
+          min="5"
+          max="1440"
+        />
+      </div>
+
+      {/* Image Upload */}
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="image" className="text-right">Upload Image</Label>
+        <Input type="file" id="image" accept="image/*" onChange={handleImageUpload} className="col-span-3" />
+      </div>
+
+      {/* Display Uploaded Image */}
+      {imageUrl && (
+        <div className="mt-4">
+          <p className="text-gray-500">Uploaded Image:</p>
+          <img src={imageUrl} alt="Uploaded" className="w-40 h-40 rounded-lg mt-2" />
+        </div>
+      )}
+
+    {!loading ?  <Button onClick={handleSubmitPost} 
+     disabled={loading} className="hover:cursor-pointer">Share</Button>
+    : <Button disabled className="hover:cursor-pointer">Uploading...</Button>}
+    </div>
+        <ImageUploader/>
           {/* Scrollable "Your Sharings" Section */}
           <div className="mt-4 overflow-y-auto max-h-96 border p-4">
             <h2 className="text-2xl pb-5 font-bold">Recent Activity</h2>

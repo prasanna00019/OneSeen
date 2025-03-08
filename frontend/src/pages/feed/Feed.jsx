@@ -57,7 +57,7 @@
 //   const handleDelete = async (postId) => {
 //     try {
 //       // Make your delete API call here
-//       await axios.delete(`http://localhost:5000/api/posts/delete/${postId}`);
+//       await axios.delete(`https://oneseen.onrender.com/api/posts/delete/${postId}`);
 //       setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
 //     } catch (error) {
 //       console.error("Error deleting post:", error);
@@ -65,7 +65,7 @@
 //   };
 //   const fetchFeed = async () => {
 //     try {
-//       const response = await axios.get("http://localhost:5000/api/posts/get-posts");
+//       const response = await axios.get("https://oneseen.onrender.com/api/posts/get-posts");
 //       const sortedPosts = response.data.sort(
 //         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
 //       );
@@ -77,7 +77,7 @@
 
 //   const handleUpvote = async (postId) => {
 //     try {
-//       const response = await axios.put(`http://localhost:5000/api/posts/upvote/${postId}`,{
+//       const response = await axios.put(`https://oneseen.onrender.com/api/posts/upvote/${postId}`,{
 //         userId: user.id
 //       });
 //       const updatedPost = response.data.post;
@@ -96,7 +96,7 @@
 
 //   const handleDownvote = async (postId) => {
 //     try {
-//       const response = await axios.put(`http://localhost:5000/api/posts/downvote/${postId}`,{
+//       const response = await axios.put(`https://oneseen.onrender.com/api/posts/downvote/${postId}`,{
 //         userId: user.id
 //       });
 //       const updatedPost = response.data.post;
@@ -188,10 +188,11 @@ import editedthreads from '../../assets/image.png'
 import axios from "axios";
 import { SocketContext } from "../../../context/SocketContext";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { toast } from "sonner";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const { user } = useKindeAuth();
+  const { user,isAuthenticated } = useKindeAuth();
   const { socket } = useContext(SocketContext);
   const [selectedPost, setSelectedPost] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -240,8 +241,17 @@ const Feed = () => {
           console.log('deletedPost in sokcet ...', postId);
           setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
         })
+        socket.on('EditImage', (updatedPost) => {
+          console.log('EditImage in sokcet ...', updatedPost);
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post._id === updatedPost.data._id ? updatedPost.data : post
+            )
+          );
+        })
         return () => {
           socket.off("newPost");
+          socket.off("EditImage");
           socket.off("upvoted");
           socket.off("disappearPost");
           socket.off("deletedPost");
@@ -252,7 +262,7 @@ const Feed = () => {
 
   const fetchFeed = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/posts/get-posts");
+      const response = await axios.get("https://oneseen.onrender.com/api/posts/get-posts");
       const sortedPosts = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -264,9 +274,12 @@ const Feed = () => {
 
   const handleVote = async (postId, type) => {
     try {
+      if(!isAuthenticated){
+       toast.error('Please login to vote',{duration:2000},);
+       }
       const endpoint = type === 'upvote' ? 'upvote' : 'downvote';
       const response = await axios.put(
-        `http://localhost:5000/api/posts/${endpoint}/${postId}`,
+        `https://oneseen.onrender.com/api/posts/${endpoint}/${postId}`,
         { userId: user.id }
       );
       const updatedPost = response.data.post;
@@ -285,7 +298,7 @@ const Feed = () => {
     console.log('postToDelete:', postToDelete);
     if (!postToDelete) return;
     try {
-      const response= await axios.delete(`http://localhost:5000/api/posts/delete-post/${postToDelete}`);
+      const response= await axios.delete(`https://oneseen.onrender.com/api/posts/delete-post/${postToDelete}`);
       // setPosts(prevPosts => prevPosts.filter(post => post._id !== postToDelete));
       const postid=response.data.postId;
       socket.emit('postDeleted',postid)
@@ -295,13 +308,19 @@ const Feed = () => {
     }
   };
 const handleEditPost= async () => {
+  console.log('posttoedit:', posttoedit);
   if (!posttoedit) return;
   try {
-    await axios.put(`http://localhost:5000/api/posts/edit/${posttoedit}`);
-    setPosts(prevPosts => prevPosts.filter(post => post._id !== posttoedit));
-    setDeleteDialogOpen(false);
+   const response= await axios.put(`https://oneseen.onrender.com/api/posts/edit-post/${posttoedit._id}`,{
+      title:posttoedit.title,
+      description:posttoedit.description,
+      media:posttoedit.media
+    });
+    // setPosts(prevPosts => prevPosts.filter(post => post._id !== posttoedit._id));
+    socket.emit('EditImage',response)
+    seteditDialogOpen(false);
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("Error editing post:", error);
   }
 }
   return (
@@ -338,6 +357,9 @@ const handleEditPost= async () => {
                 </div>
                 <p className="mt-2 font-medium">{post.title}</p>
                 <p className="text-muted-foreground">{post.description}</p>
+                {post?.media && 
+                 <img onClick={(e)=>{e.stopPropagation();}} src={post.media} width={"100%"} alt="" />
+                 }
                 <div className="mt-2 flex items-center space-x-6 text-gray-500">
                   <button
                     onClick={(e) => {
@@ -384,13 +406,15 @@ const handleEditPost= async () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setPosttoedit(post._id);
+                        setPosttoedit(post);
                         seteditDialogOpen(true);
                       }}
                       className="hover:text-red-600 transition"
                     >
     <Pen size={24} color="blue" />
-    <img src={editedthreads} width={70} alt="" />
+    {post.isEdited && <img
+     onClick={(e)=>{e.stopPropagation();toast.message("This post was Edited")}}
+    src={editedthreads} className="ml-8" width={70} alt="" />}
     </button>
                   )}
                 </div>
@@ -426,7 +450,7 @@ const handleEditPost= async () => {
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={editDialogOpen} onOpenChange={seteditDialogOpen}>
+      {/* <Dialog open={editDialogOpen} onOpenChange={seteditDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirm Edit</DialogTitle>
@@ -436,7 +460,7 @@ const handleEditPost= async () => {
           </DialogHeader>
           <div className="flex justify-end space-x-2 mt-4">
             <button
-              onClick={() => seteditDialogOpen(false)}
+              onClick={() => {seteditDialogOpen(false);setPosttoedit(null)}}
               className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
             >
               Cancel
@@ -449,7 +473,59 @@ const handleEditPost= async () => {
             </button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
+<Dialog open={editDialogOpen} onOpenChange={seteditDialogOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Edit Post</DialogTitle>
+      <DialogDescription>
+        Modify your post details below and confirm the changes.
+      </DialogDescription>
+    </DialogHeader>
+
+    {/* Editable Input Fields */}
+    <div className="grid gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Title</label>
+        <input
+          type="text"
+          value={posttoedit?.title || ""}
+          onChange={(e) => setPosttoedit({ ...posttoedit, title: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Description</label>
+        <textarea
+          value={posttoedit?.description || ""}
+          onChange={(e) => setPosttoedit({ ...posttoedit, description: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200"
+          rows="3"
+        />
+      </div>
+    </div>
+
+    {/* Action Buttons */}
+    <div className="flex justify-end space-x-2 mt-4">
+      <button
+        onClick={() => {
+          seteditDialogOpen(false);
+          setPosttoedit(null);
+        }}
+        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleEditPost}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Save Changes
+      </button>
+    </div>
+  </DialogContent>
+</Dialog>
 
       {/* Post Detail Dialog */}
       <Dialog open={!!selectedPost} onOpenChange={(open) => !open && setSelectedPost(null)}>

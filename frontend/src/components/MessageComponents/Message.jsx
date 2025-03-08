@@ -19,7 +19,7 @@ const Message = () => {
     const getAllUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/auth/all-users"
+          "https://oneseen.onrender.com/api/auth/all-users"
         );
         setUsers(response.data);
       } catch (error) {
@@ -35,9 +35,9 @@ const Message = () => {
       <div className="w-1/3 h-screen border-r p-4">
         <h2 className="text-lg font-semibold mb-4">Inbox</h2>
         <ul>
-          {users.map(
+          {users?.map(
             (u) =>
-              u.email !== user.email && (
+              u?.email !== user?.email && (
                 <li
                   key={u._id}
                   className="p-2 cursor-pointer hover:bg-gray-200 flex items-center"

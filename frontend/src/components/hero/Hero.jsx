@@ -2,9 +2,11 @@ import React from "react";
 import logo from "../../assets/logo.svg";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { Button } from "../ui/button";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const { login } = useKindeAuth();
+  const navigate=useNavigate();
   return (
     <div>
       <section class="bg-white">
@@ -29,6 +31,12 @@ const Hero = () => {
                 onClick={login}
               >
                 Get Started
+              </Button>
+              <Button
+                class="block w-full hover:cursor-pointer rounded-full bg-primary px-12 py-3 text-sm font-medium text-white shadow-sm hover:bg-primary focus:ring-3 focus:outline-hidden sm:w-auto"
+                onClick={()=>{navigate('/anonymous');}}
+              >
+                Browse Anonymously
               </Button>
             </div>
           </div>

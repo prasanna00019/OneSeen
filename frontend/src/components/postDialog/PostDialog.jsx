@@ -17,11 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { SocketContext } from "../../../context/SocketContext";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 
 const PostDialog = ({ post }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const {socket}=useContext(SocketContext);
+  const {user ,isAuthenticated}=useKindeAuth();
   useEffect(()=>{
     socket.on('newComment',(newcomment)=>{
         console.log('newcomment socket ... ',newcomment);
@@ -36,9 +38,9 @@ const PostDialog = ({ post }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/comments/create-comment/${post._id}`,
+        `https://oneseen.onrender.com/api/comments/create-comment/${post._id}`,
         {
-          userId: post.user,
+          userId: isAuthenticated?user.id:'Anonymous',
           comment,
         }
       );
@@ -55,7 +57,7 @@ const PostDialog = ({ post }) => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/comments/get-comments/${post._id}`
+        `https://oneseen.onrender.com/api/comments/get-comments/${post._id}`
       );
       const data = response.data;
       const sortedComments = data.sort(
@@ -86,6 +88,7 @@ const PostDialog = ({ post }) => {
         </div>
         <DialogTitle>{post.title}</DialogTitle>
         <DialogDescription>{post.description}</DialogDescription>
+        <p className="text-sm text-gray-500 bg-amber-200">This post expires in {post.expiresAt/60} minutes</p>
         <div className="mt-2 flex items-center space-x-6 text-gray-500">
           <button className="flex items-center space-x-1">
             <ChevronUp className="w-3 h-3" />

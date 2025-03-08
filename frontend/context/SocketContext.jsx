@@ -19,7 +19,7 @@
 //   useEffect(() => {
 //     if (!socketRef.current) {
 //       // Initialize socket only once
-//       socketRef.current = io('http://localhost:5000', {
+//       socketRef.current = io('https://oneseen.onrender.com', {
 //         query: {
 //           Authuser: Authuser ?JSON.stringify(Authuser) : null, // Serialize the Authuser object
 //           userId: clickedId ? clickedId : null, // Send the userId to the server
@@ -64,7 +64,7 @@ export const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const [clickedId, setClickedId] = useState(null);
   const [Authuser, setAuthuser] = useState(null);
-  const socket = io('http://localhost:5000', {
+  const socket = io('https://oneseen.onrender.com', {
     query: { userId: clickedId, Authuser: JSON.stringify(Authuser) || null },
 
   });
