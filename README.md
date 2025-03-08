@@ -10,6 +10,14 @@
 
 Welcome to **OneSeen**, a fully anonymous platform where users can post confessions, send self-destructing secret messages, and experience complete privacy. Messages can only be viewed once and will disappear forever after being read or after 24 hours if unopened.
 
+## Screenshots
+
+![](frontend/src/assets/demo5.png)
+![](frontend/src/assets/demo.png)
+![](frontend/src/assets/demo4.png)
+![](frontend/src/assets/demo3.png)
+![](frontend/src/assets/demo2.png)
+
 ## Features
 - 🔒 **Complete Anonymity** – No login required for confessions.
 - 📩 **One-Time Secret Messages** – Messages auto-delete after being read.
