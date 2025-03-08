@@ -21,14 +21,14 @@ import { SocketContext } from "../../../context/SocketContext";
 const PostDialog = ({ post }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const {socket}=useContext(SocketContext);
-  useEffect(()=>{
-    socket.on('newComment',(newcomment)=>{
-        console.log('newcomment socket ... ',newcomment);
-      setComments((prevComments) => [newcomment,...prevComments]);
+  const { socket } = useContext(SocketContext);
+  useEffect(() => {
+    socket.on("newComment", (newcomment) => {
+      console.log("newcomment socket ... ", newcomment);
+      setComments((prevComments) => [newcomment, ...prevComments]);
     });
-    return ()=>socket.off('newComment');
-  },[socket])
+    return () => socket.off("newComment");
+  }, [socket]);
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
@@ -36,7 +36,7 @@ const PostDialog = ({ post }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/comments/create-comment/${post._id}`,
+        `https://oneseen.onrender.com/api/comments/create-comment/${post._id}`,
         {
           userId: post.user,
           comment,
@@ -44,8 +44,8 @@ const PostDialog = ({ post }) => {
       );
       setComment("");
       if (response.status == 201) {
-        const newcomm=response.data;
-        socket.emit('newComment',newcomm);
+        const newcomm = response.data;
+        socket.emit("newComment", newcomm);
       }
     } catch (error) {
       console.error(error);
@@ -55,7 +55,7 @@ const PostDialog = ({ post }) => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/comments/get-comments/${post._id}`
+        `https://oneseen.onrender.com/api/comments/get-comments/${post._id}`
       );
       const data = response.data;
       const sortedComments = data.sort(

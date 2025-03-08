@@ -36,7 +36,7 @@ const Homepage = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/posts/create-post",
+        "https://oneseen.onrender.com/api/posts/create-post",
         {
           description,
           title,
@@ -55,7 +55,7 @@ const Homepage = () => {
   const fetchUserPosts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/posts/get-post-of-a-user/${user.id}`
+        `https://oneseen.onrender.com/api/posts/get-post-of-a-user/${user.id}`
       );
       const posts = response.data;
       const sortedPosts = posts.sort(
@@ -151,42 +151,48 @@ const Homepage = () => {
           {/* Scrollable "Your Sharings" Section */}
           <div className="mt-4 overflow-y-auto max-h-96 border p-4">
             <h2 className="text-2xl pb-5 font-bold">Recent Activity</h2>
-            {userPosts.map((post, index) => (
-              <div key={index} className="border-b p-5 mb-2">
-                <div className="flex items-start">
-                  <img
-                    src={`https://picsum.photos/seed/${encodeURIComponent(
-                      post._id || post.user
-                    )}/200/300`}
-                    alt={post.user}
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-5 justify-between">
-                      <p className="text-gray-500 text-sm">
-                        {new Date(post.createdAt).toLocaleString()}
+            {userPosts.length === 0 ? (
+              <p className="text-muted-foreground">No recent activity</p>
+            ) : (
+              userPosts.map((post, index) => (
+                <div key={index} className="border-b p-5 mb-2">
+                  <div className="flex items-start">
+                    <img
+                      src={`https://picsum.photos/seed/${encodeURIComponent(
+                        post._id || post.user
+                      )}/200/300`}
+                      alt={post.user}
+                      className="w-12 h-12 rounded-full mr-4"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-5 justify-between">
+                        <p className="text-gray-500 text-sm">
+                          {new Date(post.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <p className="mt-2">{post.title}</p>
+                      <p className="text-muted-foreground">
+                        {post.description}
                       </p>
-                    </div>
-                    <p className="mt-2">{post.title}</p>
-                    <p className="text-muted-foreground">{post.description}</p>
-                    <div className="mt-2 flex items-center space-x-6 text-gray-500">
-                      <button className="flex items-center space-x-1">
-                        <ChevronUp className="w-3 h-3" />
-                        <span>{post.upvotes}</span>
-                      </button>
-                      <button className="flex items-center space-x-1">
-                        <ChevronDown className="w-3 h-3" />
-                        <span>{post.downvotes}</span>
-                      </button>
-                      <button className="flex items-center space-x-1">
-                        <MessageCircle className="w-3 h-3" />
-                        <span>{post.comments.length}</span>
-                      </button>
+                      <div className="mt-2 flex items-center space-x-6 text-gray-500">
+                        <button className="flex items-center space-x-1">
+                          <ChevronUp className="w-3 h-3" />
+                          <span>{post.upvotes}</span>
+                        </button>
+                        <button className="flex items-center space-x-1">
+                          <ChevronDown className="w-3 h-3" />
+                          <span>{post.downvotes}</span>
+                        </button>
+                        <button className="flex items-center space-x-1">
+                          <MessageCircle className="w-3 h-3" />
+                          <span>{post.comments.length}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       )}

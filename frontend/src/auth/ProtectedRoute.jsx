@@ -2,14 +2,16 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Loading from "../components/loading/Loading";
-import axios from 'axios';
+import axios from "axios";
 
 const ProtectedRoute = () => {
   const { isLoading, isAuthenticated, user, login } = useKindeAuth();
 
   const checkUsernameInDB = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/auth/check-username/${username}`);
+      const response = await axios.get(
+        `https://oneseen.onrender.com/api/auth/check-username/${username}`
+      );
       return response.data.message === "User already exists";
     } catch (error) {
       console.error("Error checking username:", error);
@@ -23,7 +25,7 @@ const ProtectedRoute = () => {
         const exists = await checkUsernameInDB(user.username);
         if (!exists) {
           try {
-            await axios.post('http://localhost:5000/api/auth/register', {
+            await axios.post("https://oneseen.onrender.com/api/auth/register", {
               username: user.id,
               email: user.email,
             });

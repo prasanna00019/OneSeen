@@ -45,7 +45,7 @@ const Sidebar = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/posts/create-post",
+        "https://oneseen.onrender.com/api/posts/create-post",
         {
           description,
           title,
