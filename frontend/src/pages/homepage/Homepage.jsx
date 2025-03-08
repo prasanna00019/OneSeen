@@ -18,7 +18,7 @@ import { SocketContext } from "../../../context/SocketContext";
 import ImageUploader from "../../components/ImageUploader";
 
 const Homepage = () => {
-  const { user } = useKindeAuth();
+  const { user ,isAuthenticated} = useKindeAuth();
   const currentRoute = useSelector((state) => state.router.currentRoute);
   const [interval, setInterval] = useState(5);
   const [title, setTitle] = useState("");
@@ -75,7 +75,7 @@ const Homepage = () => {
           description,
           title,
           interval: interval * 60,
-          userId: user.id,
+          userId:isAuthenticated? user.id:"Anonymous",
           media: imageUrl
         }
       );
