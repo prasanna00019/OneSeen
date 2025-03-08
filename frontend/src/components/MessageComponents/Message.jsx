@@ -8,14 +8,14 @@ import { set } from 'mongoose';
 const Message = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const {clickedId, setClickedId} = useContext(SocketContext);
+  const { clickedId, setClickedId } = useContext(SocketContext);
   const { user } = useKindeAuth();
-  const {registerUser}=useContext(SocketContext)
-  useEffect(()=>{
-    if(clickedId){
+  const { registerUser } = useContext(SocketContext)
+  useEffect(() => {
+    if (clickedId) {
       registerUser(user.id)
     }
-  },[clickedId])
+  }, [clickedId])
   useEffect(() => {
     const getAllUsers = async () => {
       try {
@@ -39,7 +39,7 @@ const Message = () => {
               <li
                 key={u._id}
                 className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() => {setSelectedUser(u);setClickedId(u.username)}}
+                onClick={() => { setSelectedUser(u); setClickedId(u.username) }}
               >
                 {u.username}
               </li>

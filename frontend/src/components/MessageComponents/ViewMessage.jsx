@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { SocketContext } from "../../../context/SocketContext";
 
 const ViewMessage = () => {
   const { messageId } = useParams();
   const [messageData, setMessageData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const {socket}=useContext(SocketContext);
+  useEffect(()=>{
+    socket.on('disappearMessage',(id,msg)=>{
+      console.log('disappearing message:', id);
+      console.log('msg: deleted .. . . . ',msg);
+    });
+    return () => {
+      socket.off('disappearMessage');
+    }
+  },[socket])
   useEffect(() => {
     const fetchMessage = async () => {
       try {

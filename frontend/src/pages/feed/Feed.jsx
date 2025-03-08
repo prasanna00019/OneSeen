@@ -204,40 +204,51 @@ const Feed = () => {
   }, []);
 
   useEffect(() => {
-    const socketHandlers = {
-      upvoted: (updatedPost) => {
-        setPosts(prevPosts => prevPosts.map(post => 
-          post._id === updatedPost._id ? updatedPost : post
-        ));
-      },
-      disappearPost: (postId) => {
-        setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
-      },
-      downvote: (updatedPost) => {
-        setPosts(prevPosts => prevPosts.map(post => 
-          post._id === updatedPost._id ? updatedPost : post
-        ));
-      },
-      postUpdated: (updatedPost) => {
-        setPosts(prevPosts => prevPosts.map(post => 
-          post._id === updatedPost._id ? updatedPost : post
-        ));
-      },
-      newPost: (newPost) => {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
-      }
-    };
-
-    Object.entries(socketHandlers).forEach(([event, handler]) => {
-      socket.on(event, handler);
-    });
-
-    return () => {
-      Object.keys(socketHandlers).forEach(event => {
-        socket.off(event);
-      });
-    };
-  }, [socket]);
+        socket.on("upvoted", (updatedPost) => {
+          console.log("upvoted in sokcet ...", updatedPost);
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post._id === updatedPost._id ? updatedPost : post
+            )
+          );
+        });
+        socket.on('disappearPost', (postId) => {
+          console.log('disappearPost in sokcet ...', postId);
+          setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        })
+        socket.on("downvote", (updatedPost) => {
+          // console.log("in sokcet ...", updatedPost);
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post._id === updatedPost._id ? updatedPost : post
+            )
+          );
+        });
+        
+        socket.on("postUpdated", (updatedPost) => {
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post._id === updatedPost._id ? updatedPost : post
+            )
+          );
+        });
+       socket.on("newPost", (newPost) => {
+          console.log("newPost in sokcet ...", newPost);
+          setPosts((prevPosts) => [newPost, ...prevPosts]);
+        });
+        socket.on('postDeleted', (postId) => {
+          console.log('deletedPost in sokcet ...', postId);
+          setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        })
+        return () => {
+          socket.off("newPost");
+          socket.off("upvoted");
+          socket.off("disappearPost");
+          socket.off("deletedPost");
+          socket.off("downvote");
+          socket.off("postUpdated");
+        };
+      }, [socket]);
 
   const fetchFeed = async () => {
     try {
@@ -271,9 +282,10 @@ const Feed = () => {
   };
 
   const handleDelete = async () => {
+    console.log('postToDelete:', postToDelete);
     if (!postToDelete) return;
     try {
-      const response= await axios.delete(`http://localhost:5000/api/posts/delete/${postToDelete}`);
+      const response= await axios.delete(`http://localhost:5000/api/posts/delete-post/${postToDelete}`);
       // setPosts(prevPosts => prevPosts.filter(post => post._id !== postToDelete));
       const postid=response.data.postId;
       socket.emit('postDeleted',postid)
@@ -403,7 +415,7 @@ const handleEditPost= async () => {
               Cancel
             </button>
             <button
-              onClick={handleDelete}
+              onClick={() => {handleDelete()}}
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
               Delete

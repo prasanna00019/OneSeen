@@ -44,12 +44,12 @@ authUser);
     };
     fetchMessages();
   }, [selectedUser, authUser]);
-const handleDisappearMessage=async(id,flag)=>{
+const handleDisappearMessage=async(id,flag,msg)=>{
   try{
     console.log(flag ,' flag');
     if(!flag){
       console.log('disappearing message:', id,flag);
-    socket.emit('disappearMessage',id);
+    socket.emit('disappearMessage',{id,msg});
   }
     // setMessages(messages.filter((msg)=>msg._id!==id));
   }
@@ -79,7 +79,7 @@ const handleDisappearMessage=async(id,flag)=>{
               http://localhost:5173/message/{msg._id}
             </span>
             <span
-  onClick={() => {window.open(`/message/${msg._id}`, '_blank');handleDisappearMessage(msg._id,user.id===msg.sender? true:false)}}
+  onClick={() => {window.open(`/message/${msg._id}`, '_blank');handleDisappearMessage(msg._id,user.id===msg.sender? true:false,msg)}}
   className="inline-block p-2 rounded-lg bg-gray-200 hover:bg-gray-300 cursor-pointer"
 >
   ➡

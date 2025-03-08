@@ -64,9 +64,9 @@ export const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const [clickedId, setClickedId] = useState(null);
   const [Authuser, setAuthuser] = useState(null);
-  const socket = io('http://localhost:5000',{
-    query:{userId:clickedId,Authuser:JSON.stringify(Authuser) || null},
- 
+  const socket = io('http://localhost:5000', {
+    query: { userId: clickedId, Authuser: JSON.stringify(Authuser) || null },
+
   });
   const [socketId, setSocketId] = useState(null);
   useEffect(() => {
@@ -78,7 +78,7 @@ export const SocketProvider = ({ children }) => {
     //   console.log('Received message:', data);
     // });
     socket.on('disconnect', () => {
-      console.log('Disconnected from server');  
+      console.log('Disconnected from server');
     });
     return () => {
       socket.off('connect');

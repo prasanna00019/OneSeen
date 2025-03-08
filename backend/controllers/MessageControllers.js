@@ -1,41 +1,41 @@
 import MessageModel from "../models/MessageModel.js";
 export const createMessage = async (req, res) => {
-  try{
-    const {message ,sender, recipient ,expiresAt}=req.body;
-    const newmessage=new MessageModel({
-        message,
-        sender,
-        recipient,
-        expiresAt
-    });
-    const createdMessage=await newmessage.save();
-    res.status(201).json(createdMessage);
-  }
-  catch(err){
-    console.log(err);
-    res.status(500).json({message:"Internal Server Error"});
-  }
+    try {
+        const { message, sender, recipient, expiresAt } = req.body;
+        const newmessage = new MessageModel({
+            message,
+            sender,
+            recipient,
+            expiresAt
+        });
+        const createdMessage = await newmessage.save();
+        res.status(201).json(createdMessage);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 export const EditMessageById = async (req, res) => {
-    try{
-        const {Message}=req.body;
-        const messageId=req.params.messageId;
-        const message =await MessageModel.findById(messageId);    
-        if(!message){
-            return res.status(404).json({message:"Message not found"});
+    try {
+        const { Message } = req.body;
+        const messageId = req.params.messageId;
+        const message = await MessageModel.findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
         }
-        if(message.message===Message){
-            return res.status(400).json({message:"No changes detected"});
+        if (message.message === Message) {
+            return res.status(400).json({ message: "No changes detected" });
         }
-        else{
-            message.message=Message;
-            const updatedMessage=await message.save();
+        else {
+            message.message = Message;
+            const updatedMessage = await message.save();
             res.status(200).json(updatedMessage);
         }
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(500).json({message:"Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 export const GetMessagesBetweenTwoUsers = async (req, res) => {
@@ -58,32 +58,32 @@ export const GetMessagesBetweenTwoUsers = async (req, res) => {
 };
 
 export const DeleteMessage = async (req, res) => {
-    try{
-          const messageId=req.params.messageId;
-            const message =await MessageModel.findById(messageId);
-            if(!message){
-                return res.status(404).json({message:"Message not found"});
-            }       
-            await MessageModel.findByIdAndDelete(messageId);
-            res.status(200).json({message:"Message deleted successfully"});
+    try {
+        const messageId = req.params.messageId;
+        const message = await MessageModel.findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+        await MessageModel.findByIdAndDelete(messageId);
+        res.status(200).json({ message: "Message deleted successfully" });
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(500).json({message:"Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
-export const GetMesssageById=async(req,res)=>{
-    try{
-        const messageId=req.params.messageId;
-        const message =await MessageModel
-        .findById(messageId);
-        if(!message){
-            return res.status(404).json({message:"Message not found"});
+export const GetMesssageById = async (req, res) => {
+    try {
+        const messageId = req.params.messageId;
+        const message = await MessageModel
+            .findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
         }
         res.status(200).json(message);
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(500).json({message:"Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    }
+}

@@ -23,7 +23,7 @@ const Homepage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [userPosts, setUserPosts] = useState([]);
-  const {socket}=useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const handleIntervalChange = (e) => {
     const value = parseInt(e.target.value, 10);
     if (value >= 5 && value <= 1440) {
