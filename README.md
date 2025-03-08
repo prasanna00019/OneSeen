@@ -16,7 +16,7 @@ Welcome to **OneSeen**, a fully anonymous platform where users can post confessi
 ![](frontend/src/assets/demo4.png)
 ![](frontend/src/assets/demo3.png)
 ![](frontend/src/assets/demo2.png)
-[DEMO LINK](https://drive.google.com/file/d/1lPpTWeDrpcdvLOlXUtK3ghBk2nOUscd3/view?usp=sharing)
+[DEMO LINK](https://drive.google.com/file/d/1_FdQKjGVLSmvadxSnGmU_PKU1b8UhKOM/view?usp=sharing)
 ## Features
 - 🔒 **Complete Anonymity** – No login required for confessions.
 - 📩 **One-Time Secret Messages** – Messages auto-delete after being read.
