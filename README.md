@@ -1,83 +1,91 @@
-![](frontend/src/assets/logo.svg)
-# OneSeen - Secret Confessions & One-Time Messages
+# NSFW Detection API & Client
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-![WebSockets](https://img.shields.io/badge/WebSockets-000000?style=for-the-badge&logo=websockets&logoColor=white)
-![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![React](https://img.shields.io/badge/Javascript-20232A?style=for-the-badge&logo=javascript&logoColor=61DAFB)
+![React](https://img.shields.io/badge/Python-20232A?style=for-the-badge&logo=python&logoColor=61DAFB)
 
-Welcome to **OneSeen**, a fully anonymous platform where users can post confessions, send self-destructing secret messages, and experience complete privacy. Messages can only be viewed once and will disappear forever after being read or after 24 hours if unopened.
+## Overview
+NSFW detection system that can classify images and text as NSFW (Not Safe For Work) or SFW (Safe For Work). It includes an API for image and text classification and client implementations in JavaScript and Python.
 
-## Screenshots
+## Screenshot
 
-![](frontend/src/assets/demo5.png)
-![](frontend/src/assets/demo.png)
-![](frontend/src/assets/demo4.png)
-![](frontend/src/assets/demo3.png)
-![](frontend/src/assets/demo2.png)
+![](nsfw.jpg)
 
 ## Features
-- 🔒 **Complete Anonymity** – No login required for confessions.
-- 📩 **One-Time Secret Messages** – Messages auto-delete after being read.
-- ⏳ **Timer-Based Expiry** – Unopened messages expire in 24 hours.
-- 📝 **Anonymous Confession Feed** – Post and read confessions without revealing your identity.
-- 🛡 **Privacy-Focused** – No data storage, no tracking, no logs.
+- Detect NSFW content in images and text.
+- API for hosting NSFW detection services.
+- Clients available in JavaScript and Python.
 
-## Installation
-### Backend Setup
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/your-username/oneseen.git
-   cd oneseen
+## Repository Contents
+- `Nsfw_detection_api_host.py`: Python-based API server for NSFW detection.
+- `Nsfw_detection_client.py`: Python client for interacting with the NSFW detection API.
+- `Nsfw_detection_client.js`: JavaScript client for interacting with the NSFW detection API.
+
+## Installation & Setup
+### Prerequisites
+- Python 3.x
+- Node.js (for JavaScript client)
+- Required Python libraries (listed in `requirements.txt` if available)
+
+### Setup (API Server)
+1. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
    ```
-2. Install dependencies:
-   ```bash
-   npm install  # or yarn install
-   ```
-3. Run the backend:
-   ```bash
-   npm start
+2. Run the API server:
+   ```sh
+   python Nsfw_detection_api_host.py
    ```
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
+### Setup (Python Client)
+1. Install dependencies:
+   ```sh
+   pip install requests
    ```
-2. Install dependencies:
-   ```bash
-   npm install
+2. Run the client:
+   ```sh
+   python Nsfw_detection_client.py
    ```
-3. Run the frontend:
-   ```bash
-   npm run dev
+
+### Setup (JavaScript Client)
+1. Install dependencies:
+   ```sh
+   npm install axios
+   ```
+2. Run the client:
+   ```sh
+   node Nsfw_detection_client.js
    ```
 
 ## Usage
-- **Post a confession:** Users can submit anonymous confessions to the public feed.
-- **Send a secret message:** Users generate a one-time link for private messages.
-- **Read before it’s gone:** Once opened, messages disappear permanently.
+### API Endpoints
+- `POST /detect_image` - Uploads an image for NSFW detection.
+- `POST /detect_text` - Sends text for NSFW classification.
 
-## Technologies Used
-- **Frontend:** React.js
-- **Backend:** Node.js / Express.js
-- **Database:** MongoDB
-- **Real-time Processing:** WebSockets
-- **Hosting:** Render
+### Example Request (Python Client)
+```python
+import requests
+
+url = "http://localhost:5000/detect_image"
+files = {"file": open("image.jpg", "rb")}
+response = requests.post(url, files=files)
+print(response.json())
+```
+
+### Example Request (JavaScript Client)
+```javascript
+const axios = require("axios");
+const fs = require("fs");
+
+const formData = new FormData();
+formData.append("file", fs.createReadStream("image.jpg"));
+
+axios.post("http://localhost:5000/detect_image", formData, {
+  headers: formData.getHeaders(),
+})
+.then(response => console.log(response.data))
+.catch(error => console.error(error));
+```
 
 ## Contributing
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-branch`.
-3. Commit your changes: `git commit -m 'Add new feature'`.
-4. Push to the branch: `git push origin feature-branch`.
-5. Submit a Pull Request.
-
-## License
-This project is licensed under the MIT License.
-
----
-
-🚀 **OneSeen – Say it. See it. Gone Forever.**
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
