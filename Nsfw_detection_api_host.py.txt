@@ -1,0 +1,30 @@
+from flask import Flask, request, jsonify
+from transformers import pipeline
+from PIL import Image
+import io
+from pyngrok import ngrok
+
+app = Flask(_name_)
+pipe = pipeline("image-classification", model="LukeJacob2023/nsfw-image-detector")
+
+# Start ngrok tunnel
+public_url = ngrok.connect(5000)
+print(f" Public URL: {public_url}")
+
+@app.route('/classify', methods=['POST'])
+def classify_image():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+    
+    file = request.files['file']
+    image = Image.open(io.BytesIO(file.read()))
+    results = pipe(image)
+    
+    classification_label = max(results, key=lambda x: x['score'])['label']
+    nsfw_labels = {"sexy", "porn", "hentai"}
+    nsfw_status = "NSFW" if classification_label in nsfw_labels else "SFW"
+
+    return jsonify({"status": nsfw_status, "results": results})
+
+if _name_ == '_main_':
+    app.run(port=5000)
