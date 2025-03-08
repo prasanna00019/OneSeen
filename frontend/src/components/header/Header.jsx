@@ -19,7 +19,7 @@ const Header = () => {
 
           <div class="flex flex-1 items-center justify-end md:justify-between">
             <nav aria-label="Global" class="hidden md:block">
-              <ul class="flex items-center gap-6 text-sm">
+              {/* <ul class="flex items-center gap-6 text-sm">
                 <li>
                   <a
                     class="text-gray-500 transition hover:text-gray-500/75"
@@ -79,7 +79,7 @@ const Header = () => {
                     Blog{" "}
                   </a>
                 </li>
-              </ul>
+              </ul> */}
             </nav>
 
             <div class="flex items-center gap-4">
