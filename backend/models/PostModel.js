@@ -5,6 +5,8 @@ const PostSchema = new mongoose.Schema({
     media : { type: String, required: false ,default :"" },
     upvotes: { type: Number, required: true ,default: 0},
     downvotes: { type: Number, required: true ,default: 0},
+    upvotedUsers: [{ type: String }], 
+    downvotedUsers: [{ type: String }], 
     title: { type: String, required: true },
     user: { type: String, required: true ,default: "Anonymous"},
     comments : [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" ,default: []}],

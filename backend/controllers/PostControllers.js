@@ -98,3 +98,55 @@ export const DeletePost = async (req, res) => {
             res.status(500).json({message:"Internal Server Error"});
         }
        }
+       export const upvotePost = async (req, res) => {
+        try {
+            const { postId } = req.params;
+            const { userId } = req.body; 
+            const post = await PostModel.findById(postId);
+            if (!post) return res.status(404).json({ message: "Post not found" });
+            // If user already upvoted, remove the upvote
+            if (post.upvotedUsers.includes(userId)) {
+                post.upvotedUsers = post.upvotedUsers.filter(id => id !== userId);
+                post.upvotes -= 1;
+            } else {
+                // If user has downvoted before, remove downvote
+                if (post.downvotedUsers.includes(userId)) {
+                    post.downvotedUsers = post.downvotedUsers.filter(id => id !== userId);
+                    post.downvotes -= 1;
+                }
+                // Add upvote
+                post.upvotedUsers.push(userId);
+                post.upvotes += 1;
+            }
+            await post.save();
+            return res.json({ message: "Upvote updated", post });
+        } catch (error) {
+            res.status(500).json({ message: "Server error", error });
+        }
+    };
+    export const downvotePost = async (req, res) => {
+        try {
+            const { postId } = req.params;
+            const { userId } = req.body;
+            const post = await PostModel.findById(postId);
+            if (!post) return res.status(404).json({ message: "Post not found" });
+            // If user already downvoted, remove the downvote
+            if (post.downvotedUsers.includes(userId)) {
+                post.downvotedUsers = post.downvotedUsers.filter(id => id !== userId);
+                post.downvotes -= 1;
+            } else {
+                // If user has upvoted before, remove upvote
+                if (post.upvotedUsers.includes(userId)) {
+                    post.upvotedUsers = post.upvotedUsers.filter(id => id !== userId);
+                    post.upvotes -= 1;
+                }
+                // Add downvote
+                post.downvotedUsers.push(userId);
+                post.downvotes += 1;
+            }
+            await post.save();
+            return res.json({ message: "Downvote updated", post });
+        } catch (error) {
+            res.status(500).json({ message: "Server error", error });
+        }
+    };

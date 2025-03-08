@@ -14,8 +14,10 @@ export const AddComment = async (req, res) => {
         user:userId,
         comment
    });
-    const createdComment=await newComment.save();
-    res.status(201).json(createdComment);
+   post.comments.push(newComment._id);
+   await post.save();
+   const createdComment=await newComment.save();
+   res.status(201).json(createdComment);
   }
   catch(err){
     console.log(err);
@@ -33,6 +35,8 @@ export const DeleteComment = async (req, res) => {
     if(!comment){
         return res.status(404).json({message:"Comment not found"});
     }
+    post.comments.pull(commentId);
+    await post.save();
     await CommentModel.findByIdAndDelete(commentId);
     res.status(200).json({message:"Comment deleted successfully"});
  }
