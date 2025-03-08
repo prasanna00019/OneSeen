@@ -70,7 +70,7 @@ const Homepage = () => {
     try {
       console.log("imageUrl:", imageUrl);
       const response = await axios.post(
-        "http://localhost:5000/api/posts/create-post",
+        "https://oneseen.onrender.com/api/posts/create-post",
         {
           description,
           title,
@@ -93,7 +93,7 @@ const Homepage = () => {
   const fetchUserPosts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/posts/get-post-of-a-user/${user.id}`
+        `https://oneseen.onrender.com/api/posts/get-post-of-a-user/${user.id}`
       );
       const posts = response.data;
       const sortedPosts = posts.sort(

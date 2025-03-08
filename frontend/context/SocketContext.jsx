@@ -64,7 +64,7 @@ export const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const [clickedId, setClickedId] = useState(null);
   const [Authuser, setAuthuser] = useState(null);
-  const socket = io('http://localhost:5000', {
+  const socket = io('https://oneseen.onrender.com', {
     query: { userId: clickedId, Authuser: JSON.stringify(Authuser) || null },
 
   });

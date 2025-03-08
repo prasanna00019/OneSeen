@@ -21,10 +21,10 @@ const ChatAside = ({ selectedUser, authUser }) => {
       console.log("received message from server:", msg);
       setMessages((prev) => [...prev, msg]);
     });
-    socket.on('disappearMessage', (msg) => {
-      console.log('disappearing message from chat:', msg);
-      console.log('msg: deleted .. . . . from chat aside',msg);
-      setMessages((prev) => prev.filter((msg) => msg._id !== msg._id));
+    socket.on('disappearMessage', (m) => {
+      // console.log('disappearing message from chat:', msg);
+      // console.log('msg: deleted .. . . . from chat aside',msg);
+      setMessages((prev) => prev.filter((msg) => msg._id !== m._id));
     });
     return () => {
       socket.off("receiveMessage");
@@ -40,7 +40,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
       );
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/messages/get-messages/${authUser.id}/${selectedUser.username}`
+          `https://oneseen.onrender.com/api/messages/get-messages/${authUser.id}/${selectedUser.username}`
         );
         console.log("response:", response);
         setMessages(response.data);
@@ -50,7 +50,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
     };
     fetchMessages();
   }, [selectedUser, authUser]);
-  const handleDisappearMessage=async(msg,flag)=>{
+  const handle\=async(msg,flag)=>{
     try{
       console.log(flag ,' flag');
       if(!flag){
@@ -97,7 +97,7 @@ const ChatAside = ({ selectedUser, authUser }) => {
                     : "bg-gray-200"
                 }`}
               >
-                http://localhost:5000/message/{msg._id}
+                https://oneseen.onrender.com/message/{msg._id}
               </span>
               <span
                 onClick={() => {

@@ -38,7 +38,7 @@ const PostDialog = ({ post }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/comments/create-comment/${post._id}`,
+        `https://oneseen.onrender.com/api/comments/create-comment/${post._id}`,
         {
           userId: isAuthenticated?user.id:'Anonymous',
           comment,
@@ -57,7 +57,7 @@ const PostDialog = ({ post }) => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/comments/get-comments/${post._id}`
+        `https://oneseen.onrender.com/api/comments/get-comments/${post._id}`
       );
       const data = response.data;
       const sortedComments = data.sort(
