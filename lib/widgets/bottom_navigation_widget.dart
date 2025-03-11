@@ -2,9 +2,9 @@ import "package:flutter/material.dart";
 import "package:hugeicons/hugeicons.dart";
 import "package:oneseen/constants/app_colors.dart";
 import "package:oneseen/constants/app_fonts.dart";
+import "package:oneseen/screens/create_post_screen.dart";
 import "package:oneseen/screens/home_screen.dart";
 import "package:oneseen/screens/message_screen.dart";
-import "package:oneseen/screens/post_screen.dart";
 import "package:oneseen/screens/search_screen.dart";
 import "package:oneseen/screens/user_screen.dart";
 
@@ -104,7 +104,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             MessageScreen(),
 
             /// Post screen
-            PostScreen(),
+            CreatePostScreen(),
 
             //Search screen
             SearchScreen(),

@@ -1,2 +1,54 @@
-.env 
-node_modules
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+android/.gradle/
+android/app/google-services.json
+android/key.properties
+android/app/debug.keystore
+android/.cxx/
+
+# iOS/macOS related
+ios/Flutter/Generated.xcconfig
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
+macos/Flutter/ephemeral/
+macos/.symlinks/
+macos/Pods/
+macos/Runner.xcworkspace/
+*.xcworkspace
+*.lock
+
+# Web related
+web/.dart_tool/
+web/.firebase/
+web/firebase.json
+
+# Windows/Linux related
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# VS Code
+.vscode/
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+
+# JetBrains IDEs
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Firebase & Google Services
+firebase.json
+google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+
+# Flutter plugin related
+plugin_platform_interface/
