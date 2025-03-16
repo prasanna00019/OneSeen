@@ -1,12 +1,15 @@
-import "package:flutter/material.dart";
-import "package:hugeicons/hugeicons.dart";
-import "package:oneseen/constants/app_colors.dart";
-import "package:oneseen/constants/app_fonts.dart";
-import "package:oneseen/screens/create_post_screen.dart";
-import "package:oneseen/screens/home_screen.dart";
-import "package:oneseen/screens/message_screen.dart";
-import "package:oneseen/screens/search_screen.dart";
-import "package:oneseen/screens/user_screen.dart";
+import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:oneseen/constants/app_colors.dart';
+import 'package:oneseen/constants/app_fonts.dart';
+import 'package:oneseen/providers/user_provider.dart';
+import 'package:oneseen/screens/create_post_screen.dart';
+import 'package:oneseen/screens/home_screen.dart';
+import 'package:oneseen/screens/message_screen.dart';
+import 'package:oneseen/screens/search_screen.dart';
+import 'package:oneseen/screens/user_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as custom_badge;
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
@@ -20,6 +23,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         backgroundColor: AppColors.white,
@@ -83,15 +88,21 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
             label: 'Search',
           ),
           NavigationDestination(
-            selectedIcon: HugeIcon(
-              icon: HugeIcons.strokeRoundedUser,
-              color: AppColors.white,
+            selectedIcon: custom_badge.Badge(
+              showBadge: !userProvider.isAuthenticated,
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedUser,
+                color: AppColors.white,
+              ),
             ),
-            icon: HugeIcon(
-              icon: HugeIcons.strokeRoundedUser,
-              color: AppColors.black,
+            icon: custom_badge.Badge(
+              showBadge: !userProvider.isAuthenticated,
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedUser,
+                color: AppColors.black,
+              ),
             ),
-            label: 'Profile ',
+            label: 'Profile',
           ),
         ],
       ),

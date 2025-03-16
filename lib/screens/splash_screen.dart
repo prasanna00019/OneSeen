@@ -1,7 +1,7 @@
 import "dart:async";
-
 import "package:flutter/material.dart";
-import "package:oneseen/constants/app_fonts.dart";
+import "package:oneseen/constants/app_colors.dart";
+import "package:oneseen/constants/app_paths.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,33 +13,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 1), () {
-      Navigator.pushNamed(context, "/entry");
+      Navigator.pushNamed(context, Paths.authHandler);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.sizeOf(context).width;
-
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: Center(
         child: Column(
           spacing: 5,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage("lib/assets/logo.png")),
-            Text(
-              "OneSeen",
-              style: AppFonts.primaryFont(
-                textStyle: TextStyle(
-                  fontSize: width * 0.05,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+            Image(image: AssetImage(Paths.logo), width: 100, height: 100),
           ],
         ),
       ),

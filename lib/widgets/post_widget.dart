@@ -5,12 +5,18 @@ import 'package:oneseen/constants/app_fonts.dart';
 import 'package:oneseen/models/post_model.dart';
 import 'package:oneseen/screens/post_detail_screen.dart';
 import 'package:animations/animations.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PostWidget extends StatelessWidget {
   final Post post;
   final double screenWidth;
   final double screenHeight;
   final String Function(DateTime) timeAgo;
+  final IO.Socket socket;
+  final String userId;
+  final bool isAuthenticated;
 
   const PostWidget({
     Key? key,
@@ -18,14 +24,53 @@ class PostWidget extends StatelessWidget {
     required this.screenWidth,
     required this.screenHeight,
     required this.timeAgo,
+    required this.socket,
+    required this.userId,
+    required this.isAuthenticated,
   }) : super(key: key);
+
+  Future<void> handleVote(String postId, String type) async {
+    if (!isAuthenticated) {
+      // Show a toast or any other notification to the user
+      print('Please login to vote');
+      return;
+    }
+
+    final endpoint = type == 'upvote' ? 'upvote' : 'downvote';
+    final url = Uri.parse(
+      'https://oneseen.onrender.com/api/posts/$endpoint/$postId',
+    );
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'userId': userId}),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedPost = Post.fromJson(jsonDecode(response.body)['post']);
+        // Update the post in the state (this should be done in the parent widget)
+        // For example, you can use a callback to update the post list in the parent widget
+        // updatePost(updatedPost);
+
+        // Emit the socket event
+        socket.emit(endpoint == 'upvote' ? 'upvoted' : 'downvote', updatedPost);
+      } else {
+        print('Failed to vote: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
       closedElevation: 0,
       openElevation: 0,
-      transitionType: ContainerTransitionType.fadeThrough,
+      transitionType: ContainerTransitionType.fade,
+      transitionDuration: Duration(milliseconds: 200),
       openBuilder:
           (context, _) => PostDetailScreen(post: post, timeAgo: timeAgo),
       closedBuilder:
@@ -83,7 +128,7 @@ class PostWidget extends StatelessWidget {
                           ),
                           SizedBox(height: screenHeight * 0.008),
                           SizedBox(
-                            width: screenWidth * 0.85, // Adjust width
+                            width: screenWidth * 0.85,
                             child: Text(
                               post.title,
                               maxLines: 2,
@@ -98,7 +143,7 @@ class PostWidget extends StatelessWidget {
                           ),
                           SizedBox(height: screenHeight * 0.005),
                           SizedBox(
-                            width: screenWidth * 0.85, // Adjust width
+                            width: screenWidth * 0.85,
                             child: Text(
                               post.description,
                               maxLines: 2,
@@ -132,25 +177,31 @@ class PostWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Row(
-                        children: [
-                          HugeIcon(
-                            icon: HugeIcons.strokeRoundedArrowUp01,
-                            color: AppColors.black,
-                          ),
-                          SizedBox(width: screenWidth * 0.01),
-                          Text(post.upvotes.toString()),
-                        ],
+                      InkWell(
+                        onTap: () => handleVote(post.id, 'upvote'),
+                        child: Row(
+                          children: [
+                            HugeIcon(
+                              icon: HugeIcons.strokeRoundedArrowUp01,
+                              color: AppColors.black,
+                            ),
+                            SizedBox(width: 4),
+                            Text(post.upvotes.toString()),
+                          ],
+                        ),
                       ),
-                      Row(
-                        children: [
-                          HugeIcon(
-                            icon: HugeIcons.strokeRoundedArrowDown01,
-                            color: AppColors.black,
-                          ),
-                          SizedBox(width: screenWidth * 0.01),
-                          Text(post.downvotes.toString()),
-                        ],
+                      InkWell(
+                        onTap: () => handleVote(post.id, 'downvote'),
+                        child: Row(
+                          children: [
+                            HugeIcon(
+                              icon: HugeIcons.strokeRoundedArrowDown01,
+                              color: AppColors.black,
+                            ),
+                            SizedBox(width: 4),
+                            Text(post.downvotes.toString()),
+                          ],
+                        ),
                       ),
                       Row(
                         children: [
@@ -158,7 +209,7 @@ class PostWidget extends StatelessWidget {
                             icon: HugeIcons.strokeRoundedComment02,
                             color: AppColors.black,
                           ),
-                          SizedBox(width: screenWidth * 0.01),
+                          SizedBox(width: 4),
                           Text(post.comments.length.toString()),
                         ],
                       ),

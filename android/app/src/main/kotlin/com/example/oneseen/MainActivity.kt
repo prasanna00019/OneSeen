@@ -1,4 +1,4 @@
-package com.example.oneseen
+package com.anonymous.oneseen
 
 import io.flutter.embedding.android.FlutterActivity
 

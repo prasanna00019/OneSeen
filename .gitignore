@@ -52,3 +52,4 @@ macos/Runner/GoogleService-Info.plist
 
 # Flutter plugin related
 plugin_platform_interface/
+.env*
