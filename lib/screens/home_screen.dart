@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -7,6 +6,7 @@ import 'package:oneseen/constants/app_colors.dart';
 import 'package:oneseen/constants/app_fonts.dart';
 import 'package:oneseen/constants/app_paths.dart';
 import 'package:oneseen/models/post_model.dart';
+import 'package:oneseen/providers/auth_provider.dart';
 import 'package:oneseen/widgets/appbar_widget.dart';
 import 'package:oneseen/widgets/post_widget.dart';
 import 'package:http/http.dart' as http;
@@ -181,8 +181,19 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBarWidget(
-        centerTitle: true,
         title: Image(image: AssetImage(Paths.logo), width: 70, height: 70),
+        actions: [
+          IconButton(
+            onPressed: () {
+              final authProvider = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              );
+              authProvider.logout(context);
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Post>>(
         future: futurePosts,

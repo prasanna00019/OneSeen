@@ -4,7 +4,7 @@ import 'package:oneseen/auth/auth_handler.dart';
 import 'package:oneseen/auth/login.dart';
 import 'package:oneseen/constants/app_paths.dart';
 import 'package:oneseen/firebase_options.dart';
-import 'package:oneseen/providers/google_provider.dart';
+import 'package:oneseen/providers/auth_provider.dart';
 import 'package:oneseen/screens/splash_screen.dart';
 import 'package:oneseen/widgets/bottom_navigation_widget.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => GoogleProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MyApp(),
     ),

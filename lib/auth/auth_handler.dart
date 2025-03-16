@@ -23,15 +23,18 @@ class _AuthHandlerState extends State<AuthHandler> {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
             User? user = snapshot.data;
+
             Provider.of<UserProvider>(context, listen: false).setUser(
               user?.uid ?? "Anonymous",
               user?.displayName ?? "Anonymous",
             );
+
             return BottomNavigationWidget();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             Provider.of<UserProvider>(context, listen: false).setAnonymous();
+
             return Login();
           }
         },
